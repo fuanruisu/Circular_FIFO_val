@@ -16,8 +16,8 @@ class wr_full_test extends fifo_base_test;
   
      virtual task run_phase(uvm_phase phase);
        `uvm_info("Wr rd test Class", "run_phase", UVM_MEDIUM)
-        phase.raise_objection(this); //stay in run_phase untill the Test drop the objection
-       seq.num_writes = 16;
+       phase.raise_objection(this); //stay in run_phase untill the Test drop the objection
+       seq.randomize with { num_writes >= 16; };
        seq.start(env.agent.seqr);
        #40;
        phase.drop_objection(this);
