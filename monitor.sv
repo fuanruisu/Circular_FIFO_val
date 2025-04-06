@@ -25,10 +25,20 @@ class fifo_monitor extends uvm_monitor;//uvm_monitor is the base monitor class
     tx = fifo_seq_item::type_id::create("tx");
     wait(!intf.rst)
     
-    //sampling the output
-    @(posedge intf.clk)
-    tx.rst = intf.rst;
-    //tx.d = intf.d;
-    //tx.q = intf.q;
+    //sampling the output to send it to scoreboard through tlm port
+    forever begin
+        @(posedge intf.clk)
+    	tx.rst = intf.rst;
+    	tx.wr_en = intf.wr_en ;
+   		tx.rd_en = intf.rd_en;
+    	tx.buf_out = intf.buf_out;
+        tx.buf_in = intf.buf_in;
+    	tx.fifo_counter = intf.fifo_counter;
+        tx.buf_empty = intf.buf_empty;
+        tx.buf_full = intf.buf_full;
+        tx.fifo_counter = intf.fifo_counter;
+      item_collected_port.write(tx); 
+      `uvm_info(get_type_name (), "Sendin tc to scb", UVM_MEDIUM)
+    end
   endtask
 endclass
